@@ -86,8 +86,23 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    actions = []
+    explored_set = set()
+    DFS(problem, problem.getStartState(), actions, explored_set)
+    return actions
+
+def DFS(problem, state, actions, explored_set):
+    if problem.isGoalState(state):
+        return True
+    for su in problem.getSuccessors(state):
+        current_state = su[0]
+        if current_state not in explored_set:
+            explored_set.add(current_state)
+            actions.append(su[1])
+            if DFS(problem, current_state, actions, explored_set):
+                return True
+            actions.pop()
+    return False
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
