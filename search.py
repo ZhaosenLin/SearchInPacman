@@ -106,8 +106,33 @@ def DFS(problem, state, actions, explored_set):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    frontier = util.Queue()
+    explored_set = {}
+    node = {}
+    current_state = problem.getStartState()
+    node['parent'] = None
+    node['action'] = None
+    node['state'] = current_state
+    frontier.push(node)
+    while not frontier.isEmpty():
+        node = frontier.pop()
+        if node['state'] in explored_set:
+            continue
+        explored_set[node['state']] = True
+        if problem.isGoalState(node['state']):
+            break
+        for su in problem.getSuccessors(node['state']):
+            if su not in explored_set:
+                current_node = {}
+                current_node['parent'] = node
+                current_node['action'] = su[1]
+                current_node['state'] = su[0]
+                frontier.push(current_node)
+    actions = []
+    while node['action'] is not None:
+        actions.append(node['action'])
+        node = node['parent']
+    return actions[::-1]
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
