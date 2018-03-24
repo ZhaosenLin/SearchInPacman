@@ -516,8 +516,16 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    current_pos = position
+    unvisited_foods = foodGrid.asList()
+    total_dist = 0
+    while len(unvisited_foods) != 0:
+        idx, dist = find_closest_dist(current_pos, unvisited_foods)
+        total_dist += dist
+        current_pos = unvisited_foods[idx]
+        unvisited_foods.remove(unvisited_foods[idx])
+
+    return total_dist
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -547,8 +555,10 @@ class ClosestDotSearchAgent(SearchAgent):
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        foods = food.asList()
+        # BFS search will find the closest food
+        path = search.breadthFirstSearch(problem)
+        return path
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -583,8 +593,21 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         """
         x,y = state
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        foods = self.food.asList()
+        if state in foods:
+            isGoal = True
+        else:
+            isGoal = False
+        # print state
+        # For display purposes only
+        if isGoal:
+            self._visitedlist.append(state)
+            import __main__
+            if '_display' in dir(__main__):
+                if 'drawExpandedCells' in dir(__main__._display):  # @UndefinedVariable
+                    __main__._display.drawExpandedCells(self._visitedlist)  # @UndefinedVariable
+
+        return isGoal
 
 def mazeDistance(point1, point2, gameState):
     """
